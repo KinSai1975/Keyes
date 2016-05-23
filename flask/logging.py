@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    flask.logging
+    keyes.logging
     ~~~~~~~~~~~~~
 
-    Implements the logging support for Flask.
+    Implements the logging support for Keyes.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
