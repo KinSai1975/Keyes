@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-    flask.exthook
+    keyes.exthook
     ~~~~~~~~~~~~~
 
     Redirect imports for extensions.  This module basically makes it possible
-    for us to transition from flaskext.foo to flask_foo without having to
+    for us to transition from keyesext.foo to keyes_foo without having to
     force all extensions to upgrade at the same time.
 
-    When a user does ``from flask.ext.foo import bar`` it will attempt to
-    import ``from flask_foo import bar`` first and when that fails it will
-    try to import ``from flaskext.foo import bar``.
+    When a user does ``from keyes.ext.foo import bar`` it will attempt to
+    import ``from keyes_foo import bar`` first and when that fails it will
+    try to import ``from keyesext.foo import bar``.
 
     We're switching from namespace packages because it was just too painful for
     everybody involved.
 
-    This is used by `flask.ext`.
+    This is used by `keyes.ext`.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -33,8 +33,8 @@ warnings.simplefilter('always', ExtDeprecationWarning)
 
 class ExtensionImporter(object):
     """This importer redirects imports from this submodule to other locations.
-    This makes it possible to transition from the old flaskext.name to the
-    newer flask_name without people having a hard time.
+    This makes it possible to transition from the old keyesext.name to the
+    newer keyes_name without people having a hard time.
     """
 
     def __init__(self, module_choices, wrapper_module):
@@ -57,7 +57,7 @@ class ExtensionImporter(object):
 
     def find_module(self, fullname, path=None):
         if fullname.startswith(self.prefix) and \
-           fullname != 'flask.ext.ExtDeprecationWarning':
+           fullname != 'keyes.ext.ExtDeprecationWarning':
             return self
 
     def load_module(self, fullname):
@@ -67,7 +67,7 @@ class ExtensionImporter(object):
         modname = fullname.split('.', self.prefix_cutoff)[self.prefix_cutoff]
 
         warnings.warn(
-            "Importing flask.ext.{x} is deprecated, use flask_{x} instead."
+            "Importing keyes.ext.{x} is deprecated, use keyes_{x} instead."
             .format(x=modname), ExtDeprecationWarning
         )
 
@@ -99,10 +99,10 @@ class ExtensionImporter(object):
             if '.' not in modname:
                 setattr(sys.modules[self.wrapper_module], modname, module)
 
-            if realname.startswith('flaskext.'):
+            if realname.startswith('keyesext.'):
                 warnings.warn(
-                    "Detected extension named flaskext.{x}, please rename it "
-                    "to flask_{x}. The old form is deprecated."
+                    "Detected extension named keyesext.{x}, please rename it "
+                    "to keyes_{x}. The old form is deprecated."
                     .format(x=modname), ExtDeprecationWarning
                 )
 
