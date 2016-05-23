@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask
+    keyes
     ~~~~~
 
     A microframework based on Werkzeug.  It's extensively documented
@@ -18,7 +18,7 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 from jinja2 import Markup, escape
 
-from .app import Flask, Request, Response
+from .app import Keyes, Request, Response
 from .config import Config
 from .helpers import url_for, flash, send_file, send_from_directory, \
      get_flashed_messages, get_template_attribute, make_response, safe_join, \
@@ -40,7 +40,7 @@ from .signals import signals_available, template_rendered, request_started, \
 # it.
 from . import json
 
-# This was the only thing that flask used to export at one point and it had
+# This was the only thing that keyes used to export at one point and it had
 # a more generic name.
 jsonify = json.jsonify
 
