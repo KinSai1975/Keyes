@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.globals
+    keyes.globals
     ~~~~~~~~~~~~~
 
     Defines all the global objects that are proxies to the current
