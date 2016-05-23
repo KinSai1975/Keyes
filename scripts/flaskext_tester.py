@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    Flask Extension Tests
+    keyes Extension Tests
     ~~~~~~~~~~~~~~~~~~~~~
 
-    Tests the Flask extensions.
+    Tests the keyes extensions.
 
     :copyright: (c) 2015 by Ali Afshar.
     :license: BSD, see LICENSE for more details.
@@ -17,12 +17,12 @@ import tempfile
 import subprocess
 import argparse
 
-from flask import json
+from keyes import json
 
 from setuptools.package_index import PackageIndex
 from setuptools.archive_util import unpack_archive
 
-flask_svc_url = 'http://flask.pocoo.org/extensions/'
+keyes_svc_url = 'http://keyes.pocoo.org/extensions/'
 
 
 # OS X has awful paths when using mkstemp or gettempdir().  I don't
@@ -32,8 +32,8 @@ if sys.platform == 'darwin':
     _tempdir = '/private/tmp'
 else:
     _tempdir = tempfile.gettempdir()
-tdir = _tempdir + '/flaskext-test'
-flaskdir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+tdir = _tempdir + '/keyesext-test'
+keyesdir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 
 # virtualenv hack *cough*
@@ -42,7 +42,7 @@ os.environ['PYTHONDONTWRITEBYTECODE'] = ''
 
 RESULT_TEMPATE = u'''\
 <!doctype html>
-<title>Flask-Extension Test Results</title>
+<title>keyes-Extension Test Results</title>
 <style type=text/css>
   body         { font-family: 'Georgia', serif; font-size: 17px; color: #000; }
   a            { color: #004B6B; }
@@ -65,10 +65,10 @@ RESULT_TEMPATE = u'''\
   tr.success   { background: #D3F5CC; }
   tr.failed    { background: #F5D2CB; }
 </style>
-<h1>Flask-Extension Test Results</h1>
+<h1>keyes-Extension Test Results</h1>
 <p>
   This page contains the detailed test results for the test run of
-  all {{ 'approved' if approved }} Flask extensions.
+  all {{ 'approved' if approved }} keyes extensions.
 <h2>Summary</h2>
 <table class=results>
   <thead>
@@ -155,10 +155,10 @@ def create_tdir():
     os.mkdir(tdir)
 
 
-def package_flask():
-    distfolder = tdir + '/.flask-dist'
+def package_keyes():
+    distfolder = tdir + '/.keyes-dist'
     c = subprocess.Popen(['python', 'setup.py', 'sdist', '--formats=gztar',
-                          '--dist', distfolder], cwd=flaskdir)
+                          '--dist', distfolder], cwd=keyesdir)
     c.wait()
     return os.path.join(distfolder, os.listdir(distfolder)[0])
 
@@ -170,7 +170,7 @@ def get_test_command(checkout_dir):
 
 
 def fetch_extensions_list():
-    req = urllib2.Request(flask_svc_url, headers={'accept':'application/json'})
+    req = urllib2.Request(keyes_svc_url, headers={'accept':'application/json'})
     d = urllib2.urlopen(req).read()
     data = json.loads(d)
     for ext in data['extensions']:
@@ -201,19 +201,19 @@ deps=
   %(deps)s
   distribute
   py
-commands=bash flaskext-runtest.sh {envlogdir}/test.log
+commands=bash keyesext-runtest.sh {envlogdir}/test.log
 downloadcache=%(cache)s
 """
 
 
-def create_tox_ini(checkout_path, interpreters, flask_dep):
-    tox_path = os.path.join(checkout_path, 'tox-flask-test.ini')
+def create_tox_ini(checkout_path, interpreters, keyes_dep):
+    tox_path = os.path.join(checkout_path, 'tox-keyes-test.ini')
     if not os.path.exists(tox_path):
         with open(tox_path, 'w') as f:
             f.write(tox_template % {
                 'env':      ','.join(interpreters),
                 'cache':    tdir,
-                'deps':     flask_dep
+                'deps':     keyes_dep
             })
     return tox_path
 
@@ -224,7 +224,7 @@ def iter_extensions(only_approved=True):
             yield ext['name']
 
 
-def test_extension(name, interpreters, flask_dep):
+def test_extension(name, interpreters, keyes_dep):
     checkout_path = checkout_extension(name)
     log('Running tests with tox in %s', checkout_path)
 
@@ -236,7 +236,7 @@ def test_extension(name, interpreters, flask_dep):
     # invoking terminal.
     test_command = get_test_command(checkout_path)
     log('Test command: %s', test_command)
-    f = open(checkout_path + '/flaskext-runtest.sh', 'w')
+    f = open(checkout_path + '/keyesext-runtest.sh', 'w')
     f.write(test_command + ' &> "$1" < /dev/null\n')
     f.close()
 
@@ -244,21 +244,21 @@ def test_extension(name, interpreters, flask_dep):
     # for us.  Remove it if present, we are running tox ourselves
     # afterall.
 
-    create_tox_ini(checkout_path, interpreters, flask_dep)
-    rv = subprocess.call(['tox', '-c', 'tox-flask-test.ini'], cwd=checkout_path)
+    create_tox_ini(checkout_path, interpreters, keyes_dep)
+    rv = subprocess.call(['tox', '-c', 'tox-keyes-test.ini'], cwd=checkout_path)
     return TestResult(name, checkout_path, rv, interpreters)
 
 
 def run_tests(extensions, interpreters):
     results = {}
     create_tdir()
-    log('Packaging Flask')
-    flask_dep = package_flask()
+    log('Packaging keyes')
+    keyes_dep = package_keyes()
     log('Running extension tests')
     log('Temporary Environment: %s', tdir)
     for name in extensions:
         log('Testing %s', name)
-        result = test_extension(name, interpreters, flask_dep)
+        result = test_extension(name, interpreters, keyes_dep)
         if result.success:
             log('Extension test succeeded')
         else:
@@ -279,7 +279,7 @@ def render_results(results, approved):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Runs Flask extension tests')
+    parser = argparse.ArgumentParser(description='Runs keyes extension tests')
     parser.add_argument('--all', dest='all', action='store_true',
                         help='run against all extensions, not just approved')
     parser.add_argument('--browse', dest='browse', action='store_true',
