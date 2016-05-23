@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.helpers
+    keyes.helpers
     ~~~~~~~~~~~~~
 
     Implements various helpers.
@@ -72,7 +72,7 @@ def stream_with_context(generator_or_function):
 
     This function however can help you keep the context around for longer::
 
-        from flask import stream_with_context, request, Response
+        from keyes import stream_with_context, request, Response
 
         @app.route('/stream')
         def streamed_response():
@@ -85,7 +85,7 @@ def stream_with_context(generator_or_function):
 
     Alternatively it can also be used around a specific generator::
 
-        from flask import stream_with_context, request, Response
+        from keyes import stream_with_context, request, Response
 
         @app.route('/stream')
         def streamed_response():
@@ -138,7 +138,7 @@ def stream_with_context(generator_or_function):
 def make_response(*args):
     """Sometimes it is necessary to set additional headers in a view.  Because
     views do not have to return response objects but can return a value that
-    is converted into a response object by Flask itself, it becomes tricky to
+    is converted into a response object by Keyes itself, it becomes tricky to
     add headers to it.  This function can be called instead of using a return
     and you will get a response object which you can use to attach headers.
 
@@ -170,10 +170,10 @@ def make_response(*args):
     Internally this function does the following things:
 
     -   if no arguments are passed, it creates a new response argument
-    -   if one argument is passed, :meth:`flask.Flask.make_response`
+    -   if one argument is passed, :meth:`keyes.Keyes.make_response`
         is invoked with it.
     -   if more than one argument is passed, the arguments are passed
-        to the :meth:`flask.Flask.make_response` function as tuple.
+        to the :meth:`keyes.Keyes.make_response` function as tuple.
 
     .. versionadded:: 0.6
     """
@@ -199,11 +199,11 @@ def url_for(endpoint, **values):
 
     For more information, head over to the :ref:`Quickstart <url-building>`.
 
-    To integrate applications, :class:`Flask` has a hook to intercept URL build
-    errors through :attr:`Flask.url_build_error_handlers`.  The `url_for`
+    To integrate applications, :class:`Keyes` has a hook to intercept URL build
+    errors through :attr:`Keyes.url_build_error_handlers`.  The `url_for`
     function results in a :exc:`~werkzeug.routing.BuildError` when the current
     app does not have a URL for the given endpoint and values.  When it does, the
-    :data:`~flask.current_app` calls its :attr:`~Flask.url_build_error_handlers` if
+    :data:`~keyes.current_app` calls its :attr:`~Keyes.url_build_error_handlers` if
     it is not ``None``, which can return a string to use as the result of
     `url_for` (instead of `url_for`'s default to raise the
     :exc:`~werkzeug.routing.BuildError` exception) or re-raise the exception.
@@ -240,7 +240,7 @@ def url_for(endpoint, **values):
        The `_anchor` and `_method` parameters were added.
 
     .. versionadded:: 0.9
-       Calls :meth:`Flask.handle_build_error` on
+       Calls :meth:`Keyes.handle_build_error` on
        :exc:`~werkzeug.routing.BuildError`.
 
     :param endpoint: the endpoint of the URL (name of the function)
@@ -418,7 +418,7 @@ def send_file(filename_or_fp, mimetype=None, as_attachment=False,
     """Sends the contents of a file to the client.  This will use the
     most efficient method available and configured.  By default it will
     try to use the WSGI server's file_wrapper support.  Alternatively
-    you can set the application's :attr:`~Flask.use_x_sendfile` attribute
+    you can set the application's :attr:`~Keyes.use_x_sendfile` attribute
     to ``True`` to directly emit an ``X-Sendfile`` header.  This however
     requires support of the underlying webserver for ``X-Sendfile``.
 
@@ -441,13 +441,13 @@ def send_file(filename_or_fp, mimetype=None, as_attachment=False,
        mimetype guessing and etag support for file objects was
        deprecated because it was unreliable.  Pass a filename if you are
        able to, otherwise attach an etag yourself.  This functionality
-       will be removed in Flask 1.0
+       will be removed in Keyes 1.0
 
     .. versionchanged:: 0.9
        cache_timeout pulls its default from application config, when None.
 
     :param filename_or_fp: the filename of the file to send in `latin-1`.
-                           This is relative to the :attr:`~Flask.root_path`
+                           This is relative to the :attr:`~Keyes.root_path`
                            if a relative path is specified.
                            Alternatively a file object might be provided in
                            which case ``X-Sendfile`` might not work and fall
@@ -465,8 +465,8 @@ def send_file(filename_or_fp, mimetype=None, as_attachment=False,
 
     :param cache_timeout: the timeout in seconds for the headers. When ``None``
                           (default), this value is set by
-                          :meth:`~Flask.get_send_file_max_age` of
-                          :data:`~flask.current_app`.
+                          :meth:`~Keyes.get_send_file_max_age` of
+                          :data:`~keyes.current_app`.
     """
     mtime = None
     if isinstance(filename_or_fp, string_types):
@@ -478,7 +478,7 @@ def send_file(filename_or_fp, mimetype=None, as_attachment=False,
         filename = getattr(file, 'name', None)
 
         # XXX: this behavior is now deprecated because it was unreliable.
-        # removed in Flask 1.0
+        # removed in Keyes 1.0
         if not attachment_filename and not mimetype \
            and isinstance(filename, string_types):
             warn(DeprecationWarning('The filename support for file objects '
@@ -486,7 +486,7 @@ def send_file(filename_or_fp, mimetype=None, as_attachment=False,
                 'attach_filename if you want mimetypes to be guessed.'),
                 stacklevel=2)
         if add_etags:
-            warn(DeprecationWarning('In future flask releases etags will no '
+            warn(DeprecationWarning('In future keyes releases etags will no '
                 'longer be generated for file objects passed to the send_file '
                 'function because this behavior was unreliable.  Pass '
                 'filenames instead if possible, otherwise attach an etag '
@@ -690,9 +690,9 @@ def _matching_loader_thinks_module_is_package(loader, mod_name):
     # Otherwise we need to fail with an error that explains what went
     # wrong.
     raise AttributeError(
-        ('%s.is_package() method is missing but is required by Flask of '
+        ('%s.is_package() method is missing but is required by Keyes of '
          'PEP 302 import hooks.  If you do not use import hooks and '
-         'you encounter this error please file a bug against Flask.') %
+         'you encounter this error please file a bug against Keyes.') %
         loader.__class__.__name__)
 
 
@@ -840,11 +840,11 @@ class _PackageBoundObject(object):
         """Provides default cache_timeout for the :func:`send_file` functions.
 
         By default, this function returns ``SEND_FILE_MAX_AGE_DEFAULT`` from
-        the configuration of :data:`~flask.current_app`.
+        the configuration of :data:`~keyes.current_app`.
 
         Static file functions such as :func:`send_from_directory` use this
         function, and :func:`send_file` calls this function on
-        :data:`~flask.current_app` when the given cache_timeout is ``None``. If a
+        :data:`~keyes.current_app` when the given cache_timeout is ``None``. If a
         cache_timeout is given in :func:`send_file`, that timeout is used;
         otherwise, this method is called.
 
@@ -852,11 +852,11 @@ class _PackageBoundObject(object):
         on the filename.  For example, to set the cache timeout for .js files
         to 60 seconds::
 
-            class MyFlask(flask.Flask):
+            class MyKeyes(keyes.Keyes):
                 def get_send_file_max_age(self, name):
                     if name.lower().endswith('.js'):
                         return 60
-                    return flask.Flask.get_send_file_max_age(self, name)
+                    return keyes.Keyes.get_send_file_max_age(self, name)
 
         .. versionadded:: 0.9
         """
