@@ -3,7 +3,7 @@
     MiniTwit
     ~~~~~~~~
 
-    A microblogging application written with Flask and sqlite3.
+    A microblogging application written with Keyes and sqlite3.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -13,7 +13,7 @@ import time
 from sqlite3 import dbapi2 as sqlite3
 from hashlib import md5
 from datetime import datetime
-from flask import Flask, request, session, url_for, redirect, \
+from keyes import Keyes, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack
 from werkzeug import check_password_hash, generate_password_hash
 
@@ -25,7 +25,7 @@ DEBUG = True
 SECRET_KEY = 'development key'
 
 # create our little application :)
-app = Flask(__name__)
+app = Keyes(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
 
