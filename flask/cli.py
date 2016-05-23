@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    flask.cli
+    keyes.cli
     ~~~~~~~~~
 
-    A simple command line application to run flask apps.
+    A simple command line application to run keyes apps.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -27,22 +27,22 @@ def find_best_app(module):
     """Given a module instance this tries to find the best possible
     application in the module or raises an exception.
     """
-    from . import Flask
+    from . import Keyes
 
     # Search for the most common names first.
     for attr_name in 'app', 'application':
         app = getattr(module, attr_name, None)
-        if app is not None and isinstance(app, Flask):
+        if app is not None and isinstance(app, Keyes):
             return app
 
-    # Otherwise find the only object that is a Flask instance.
+    # Otherwise find the only object that is a Keyes instance.
     matches = [v for k, v in iteritems(module.__dict__)
-               if isinstance(v, Flask)]
+               if isinstance(v, Keyes)]
 
     if len(matches) == 1:
         return matches[0]
     raise NoAppException('Failed to find application in module "%s".  Are '
-                         'you sure it contains a Flask application?  Maybe '
+                         'you sure it contains a Keyes application?  Maybe '
                          'you wrapped it in a WSGI middleware or you are '
                          'using a factory function.' % module.__name__)
 
@@ -99,7 +99,7 @@ def locate_app(app_id):
 
 
 class DispatchingApp(object):
-    """Special application that dispatches to a flask application which
+    """Special application that dispatches to a keyes application which
     is imported by name in a background thread.  If an error happens
     it is is recorded and shows as part of the WSGI handling which in case
     of the Werkzeug debugger means that it shows up in the browser.
@@ -153,7 +153,7 @@ class DispatchingApp(object):
 
 
 class ScriptInfo(object):
-    """Help object to deal with Flask applications.  This is usually not
+    """Help object to deal with Keyes applications.  This is usually not
     necessary to interface with as it's used internally in the dispatching
     to click.
     """
@@ -173,7 +173,7 @@ class ScriptInfo(object):
         self._loaded_app = None
 
     def load_app(self):
-        """Loads the Flask app (if not yet loaded) and returns it.  Calling
+        """Loads the Keyes app (if not yet loaded) and returns it.  Calling
         this multiple times will just result in the already loaded app to
         be returned.
         """
@@ -184,7 +184,7 @@ class ScriptInfo(object):
             rv = self.create_app(self)
         else:
             if self.app_import_path is None:
-                raise NoAppException('Could not locate Flask application. '
+                raise NoAppException('Could not locate Keyes application. '
                                      'You did not provide FLASK_APP or the '
                                      '--app parameter.')
             rv = locate_app(self.app_import_path)
@@ -238,7 +238,7 @@ class AppGroup(click.Group):
     changes the behavior of the :meth:`command` decorator so that it
     automatically wraps the functions in :func:`with_appcontext`.
 
-    Not to be confused with :class:`FlaskGroup`.
+    Not to be confused with :class:`KeyesGroup`.
     """
 
     def command(self, *args, **kwargs):
@@ -262,9 +262,9 @@ class AppGroup(click.Group):
         return click.Group.group(self, *args, **kwargs)
 
 
-class FlaskGroup(AppGroup):
+class KeyesGroup(AppGroup):
     """Special subclass of the :class:`AppGroup` group that supports
-    loading more commands from the configured Flask app.  Normally a
+    loading more commands from the configured Keyes app.  Normally a
     developer does not have to interface with this class but there are
     some very advanced use cases for which it makes sense to create an
     instance of this.
@@ -388,7 +388,7 @@ def script_info_option(*args, **kwargs):
 @pass_script_info
 def run_command(info, host, port, reload, debugger, eager_loading,
                 with_threads):
-    """Runs a local development server for the Flask application.
+    """Runs a local development server for the Keyes application.
 
     This local server is recommended for development purposes only but it
     can also be used for simple intranet deployments.  By default it will
@@ -397,7 +397,7 @@ def run_command(info, host, port, reload, debugger, eager_loading,
     multithreading.
 
     The reloader and debugger are by default enabled if the debug flag of
-    Flask is enabled and disabled otherwise.
+    Keyes is enabled and disabled otherwise.
     """
     from werkzeug.serving import run_simple
     if reload is None:
@@ -417,7 +417,7 @@ def run_command(info, host, port, reload, debugger, eager_loading,
         # import path because the app was loaded through a callback then
         # we won't print anything.
         if info.app_import_path is not None:
-            print(' * Serving Flask app "%s"' % info.app_import_path)
+            print(' * Serving Keyes app "%s"' % info.app_import_path)
         if info.debug is not None:
             print(' * Forcing debug %s' % (info.debug and 'on' or 'off'))
 
@@ -430,14 +430,14 @@ def run_command(info, host, port, reload, debugger, eager_loading,
 @with_appcontext
 def shell_command():
     """Runs an interactive Python shell in the context of a given
-    Flask application.  The application will populate the default
+    Keyes application.  The application will populate the default
     namespace of this shell according to it's configuration.
 
     This is useful for executing small snippets of management code
     without having to manually configuring the application.
     """
     import code
-    from flask.globals import _app_ctx_stack
+    from keyes.globals import _app_ctx_stack
     app = _app_ctx_stack.top.app
     banner = 'Python %s on %s\nApp: %s%s\nInstance: %s' % (
         sys.version,
@@ -460,18 +460,18 @@ def shell_command():
     code.interact(banner=banner, local=ctx)
 
 
-cli = FlaskGroup(help="""\
-This shell command acts as general utility script for Flask applications.
+cli = KeyesGroup(help="""\
+This shell command acts as general utility script for Keyes applications.
 
 It loads the application configured (either through the FLASK_APP environment
 variable or the --app parameter) and then provides commands either provided
-by the application or Flask itself.
+by the application or Keyes itself.
 
 The most useful commands are the "run" and "shell" command.
 
 Example usage:
 
-  flask --app=hello --debug run
+  keyes --app=hello --debug run
 """)
 
 
@@ -485,7 +485,7 @@ def main(as_module=False):
         else:
             name = 'python -m ' + this_module
 
-        # This module is always executed as "python -m flask.run" and as such
+        # This module is always executed as "python -m keyes.run" and as such
         # we need to ensure that we restore the actual command line so that
         # the reloader can properly operate.
         sys.argv = ['-m', this_module] + sys.argv[1:]
