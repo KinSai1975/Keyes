@@ -16,7 +16,7 @@ try:
 except ImportError:
     blinker = None
 
-import flask
+import keyes
 
 
 pytestmark = pytest.mark.skipif(
@@ -25,18 +25,18 @@ pytestmark = pytest.mark.skipif(
 )
 
 def test_template_rendered():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     @app.route('/')
     def index():
-        return flask.render_template('simple_template.html', whiskey=42)
+        return keyes.render_template('simple_template.html', whiskey=42)
 
     recorded = []
 
     def record(sender, template, context):
         recorded.append((template, context))
 
-    flask.template_rendered.connect(record, app)
+    keyes.template_rendered.connect(record, app)
     try:
         app.test_client().get('/')
         assert len(recorded) == 1
@@ -44,14 +44,14 @@ def test_template_rendered():
         assert template.name == 'simple_template.html'
         assert context['whiskey'] == 42
     finally:
-        flask.template_rendered.disconnect(record, app)
+        keyes.template_rendered.disconnect(record, app)
 
 def test_before_render_template():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     @app.route('/')
     def index():
-        return flask.render_template('simple_template.html', whiskey=42)
+        return keyes.render_template('simple_template.html', whiskey=42)
 
     recorded = []
 
@@ -59,7 +59,7 @@ def test_before_render_template():
         context['whiskey'] = 43
         recorded.append((template, context))
 
-    flask.before_render_template.connect(record, app)
+    keyes.before_render_template.connect(record, app)
     try:
         rv = app.test_client().get('/')
         assert len(recorded) == 1
@@ -68,10 +68,10 @@ def test_before_render_template():
         assert context['whiskey'] == 43
         assert rv.data == b'<h1>43</h1>'
     finally:
-        flask.before_render_template.disconnect(record, app)
+        keyes.before_render_template.disconnect(record, app)
 
 def test_request_signals():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
     calls = []
 
     def before_request_signal(sender):
@@ -96,8 +96,8 @@ def test_request_signals():
         calls.append('handler')
         return 'ignored anyway'
 
-    flask.request_started.connect(before_request_signal, app)
-    flask.request_finished.connect(after_request_signal, app)
+    keyes.request_started.connect(before_request_signal, app)
+    keyes.request_finished.connect(after_request_signal, app)
 
     try:
         rv = app.test_client().get('/')
@@ -106,11 +106,11 @@ def test_request_signals():
         assert calls == ['before-signal', 'before-handler', 'handler',
                          'after-handler', 'after-signal']
     finally:
-        flask.request_started.disconnect(before_request_signal, app)
-        flask.request_finished.disconnect(after_request_signal, app)
+        keyes.request_started.disconnect(before_request_signal, app)
+        keyes.request_finished.disconnect(after_request_signal, app)
 
 def test_request_exception_signal():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
     recorded = []
 
     @app.route('/')
@@ -120,16 +120,16 @@ def test_request_exception_signal():
     def record(sender, exception):
         recorded.append(exception)
 
-    flask.got_request_exception.connect(record, app)
+    keyes.got_request_exception.connect(record, app)
     try:
         assert app.test_client().get('/').status_code == 500
         assert len(recorded) == 1
         assert isinstance(recorded[0], ZeroDivisionError)
     finally:
-        flask.got_request_exception.disconnect(record, app)
+        keyes.got_request_exception.disconnect(record, app)
 
 def test_appcontext_signals():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
     recorded = []
 
     def record_push(sender, **kwargs):
@@ -142,8 +142,8 @@ def test_appcontext_signals():
     def index():
         return 'Hello'
 
-    flask.appcontext_pushed.connect(record_push, app)
-    flask.appcontext_popped.connect(record_pop, app)
+    keyes.appcontext_pushed.connect(record_push, app)
+    keyes.appcontext_popped.connect(record_pop, app)
     try:
         with app.test_client() as c:
             rv = c.get('/')
@@ -151,24 +151,24 @@ def test_appcontext_signals():
             assert recorded == ['push']
         assert recorded == ['push', 'pop']
     finally:
-        flask.appcontext_pushed.disconnect(record_push, app)
-        flask.appcontext_popped.disconnect(record_pop, app)
+        keyes.appcontext_pushed.disconnect(record_push, app)
+        keyes.appcontext_popped.disconnect(record_pop, app)
 
 def test_flash_signal():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
     app.config['SECRET_KEY'] = 'secret'
 
     @app.route('/')
     def index():
-        flask.flash('This is a flash message', category='notice')
-        return flask.redirect('/other')
+        keyes.flash('This is a flash message', category='notice')
+        return keyes.redirect('/other')
 
     recorded = []
 
     def record(sender, message, category):
         recorded.append((message, category))
 
-    flask.message_flashed.connect(record, app)
+    keyes.message_flashed.connect(record, app)
     try:
         client = app.test_client()
         with client.session_transaction():
@@ -178,10 +178,10 @@ def test_flash_signal():
             assert message == 'This is a flash message'
             assert category == 'notice'
     finally:
-        flask.message_flashed.disconnect(record, app)
+        keyes.message_flashed.disconnect(record, app)
 
 def test_appcontext_tearing_down_signal():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
     recorded = []
 
     def record_teardown(sender, **kwargs):
@@ -191,7 +191,7 @@ def test_appcontext_tearing_down_signal():
     def index():
         1 // 0
 
-    flask.appcontext_tearing_down.connect(record_teardown, app)
+    keyes.appcontext_tearing_down.connect(record_teardown, app)
     try:
         with app.test_client() as c:
             rv = c.get('/')
@@ -199,4 +199,4 @@ def test_appcontext_tearing_down_signal():
             assert recorded == []
         assert recorded == [('tear_down', {'exc': None})]
     finally:
-        flask.appcontext_tearing_down.disconnect(record_teardown, app)
+        keyes.appcontext_tearing_down.disconnect(record_teardown, app)
