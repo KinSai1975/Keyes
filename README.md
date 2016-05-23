@@ -5,9 +5,9 @@
               web development, for efficience
 
 
-    ~ What is Flask?
+    ~ What is Keyes?
 
-      Flask is a microframework for Python based on Werkzeug
+      Keyes is a microframework for Python based on Werkzeug
       and Jinja2.  It's intended for getting started very quickly
       and was developed with best intentions in mind.
 
@@ -19,13 +19,13 @@
 
     ~ What do I need?
 
-      All dependencies are installed by using `pip install Flask`.
+      All dependencies are installed by using `pip install Keyes`.
       We encourage you to use a virtualenv. Check the docs for
       complete installation and usage instructions.
 
     ~ Where are the docs?
 
-      Go to http://flask.pocoo.org/docs/ for a prebuilt version
+      Go to http://keyes.pocoo.org/docs/ for a prebuilt version
       of the current documentation.  Otherwise build them yourself
       from the sphinx sources in the docs folder.
 
@@ -40,8 +40,8 @@
     ~ Where can I get help?
 
       Either use the #pocoo IRC channel on irc.freenode.net or
-      ask on the mailinglist: http://flask.pocoo.org/mailinglist/
+      ask on the mailinglist: http://keyes.pocoo.org/mailinglist/
 
-      See http://flask.pocoo.org/community/ for more resources.
+      See http://keyes.pocoo.org/community/ for more resources.
 
 
