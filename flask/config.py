@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.config
+    keyes.config
     ~~~~~~~~~~~~
 
     Implements the configuration related objects.
@@ -77,7 +77,7 @@ class Config(dict):
 
     :param root_path: path to which files are read relative from.  When the
                       config object is created by the application, this is
-                      the application's :attr:`~flask.Flask.root_path`.
+                      the application's :attr:`~keyes.Keyes.root_path`.
     :param defaults: an optional dictionary of default values
     """
 
