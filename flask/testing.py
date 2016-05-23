@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.testing
+    keyes.testing
     ~~~~~~~~~~~~~
 
     Implements test support helpers.  This module is lazily imported
@@ -12,7 +12,7 @@
 
 from contextlib import contextmanager
 from werkzeug.test import Client, EnvironBuilder
-from flask import _request_ctx_stack
+from keyes import _request_ctx_stack
 
 try:
     from werkzeug.urls import url_parse
@@ -36,9 +36,9 @@ def make_test_environ_builder(app, path='/', base_url=None, *args, **kwargs):
     return EnvironBuilder(path, base_url, *args, **kwargs)
 
 
-class FlaskClient(Client):
+class KeyesClient(Client):
     """Works like a regular Werkzeug test client but has some knowledge about
-    how Flask works to defer the cleanup of the request context stack to the
+    how Keyes works to defer the cleanup of the request context stack to the
     end of a ``with`` body when used in a ``with`` statement.  For general
     information about how to use this class refer to
     :class:`werkzeug.test.Client`.
@@ -63,7 +63,7 @@ class FlaskClient(Client):
         Internally this is implemented by going through a temporary test
         request context and since session handling could depend on
         request variables this function accepts the same arguments as
-        :meth:`~flask.Flask.test_request_context` which are directly
+        :meth:`~keyes.Keyes.test_request_context` which are directly
         passed through.
         """
         if self.cookie_jar is None:
@@ -100,7 +100,7 @@ class FlaskClient(Client):
 
     def open(self, *args, **kwargs):
         kwargs.setdefault('environ_overrides', {}) \
-            ['flask._preserve_context'] = self.preserve_context
+            ['keyes._preserve_context'] = self.preserve_context
 
         as_tuple = kwargs.pop('as_tuple', False)
         buffered = kwargs.pop('buffered', False)
