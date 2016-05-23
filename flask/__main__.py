@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    flask.__main__
+    keyes.__main__
     ~~~~~~~~~~~~~~
 
-    Alias for flask.run for the command line.
+    Alias for keyes.run for the command line.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
