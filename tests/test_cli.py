@@ -3,11 +3,11 @@
     tests.test_cli
     ~~~~~~~~~~~~~~
 
-    :copyright: (c) 2016 by the Flask Team, see AUTHORS for more details.
+    :copyright: (c) 2016 by the Keyes Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 #
-# This file was part of Flask-CLI and was modified under the terms its license,
+# This file was part of Keyes-CLI and was modified under the terms its license,
 # the Revised BSD License.
 # Copyright (C) 2015 CERN.
 #
@@ -16,9 +16,9 @@ from __future__ import absolute_import, print_function
 import click
 import pytest
 from click.testing import CliRunner
-from flask import Flask, current_app
+from keyes import Keyes, current_app
 
-from flask.cli import AppGroup, FlaskGroup, NoAppException, ScriptInfo, \
+from keyes.cli import AppGroup, KeyesGroup, NoAppException, ScriptInfo, \
     find_best_app, locate_app, script_info_option, with_appcontext
 
 
@@ -31,20 +31,20 @@ def test_cli_name(test_apps):
 def test_find_best_app(test_apps):
     """Test of find_best_app."""
     class mod:
-        app = Flask('appname')
+        app = Keyes('appname')
     assert find_best_app(mod) == mod.app
 
     class mod:
-        application = Flask('appname')
+        application = Keyes('appname')
     assert find_best_app(mod) == mod.application
 
     class mod:
-        myapp = Flask('appname')
+        myapp = Keyes('appname')
     assert find_best_app(mod) == mod.myapp
 
     class mod:
-        myapp = Flask('appname')
-        myapp2 = Flask('appname2')
+        myapp = Keyes('appname')
+        myapp2 = Keyes('appname2')
 
     pytest.raises(NoAppException, find_best_app, mod)
 
@@ -64,7 +64,7 @@ def test_scriptinfo(test_apps):
     assert obj.load_app().name == "testapp"
 
     def create_app(info):
-        return Flask("createapp")
+        return Keyes("createapp")
 
     obj = ScriptInfo(create_app=create_app)
     app = obj.load_app()
@@ -79,7 +79,7 @@ def test_with_appcontext():
     def testcmd():
         click.echo(current_app.name)
 
-    obj = ScriptInfo(create_app=lambda info: Flask("testapp"))
+    obj = ScriptInfo(create_app=lambda info: Keyes("testapp"))
 
     runner = CliRunner()
     result = runner.invoke(testcmd, obj=obj)
@@ -105,7 +105,7 @@ def test_appgroup():
     def test2():
         click.echo(current_app.name)
 
-    obj = ScriptInfo(create_app=lambda info: Flask("testappgroup"))
+    obj = ScriptInfo(create_app=lambda info: Keyes("testappgroup"))
 
     runner = CliRunner()
     result = runner.invoke(cli, ['test'], obj=obj)
@@ -117,12 +117,12 @@ def test_appgroup():
     assert result.output == 'testappgroup\n'
 
 
-def test_flaskgroup():
-    """Test FlaskGroup."""
+def test_keyesgroup():
+    """Test KeyesGroup."""
     def create_app(info):
-        return Flask("flaskgroup")
+        return Keyes("keyesgroup")
 
-    @click.group(cls=FlaskGroup, create_app=create_app)
+    @click.group(cls=KeyesGroup, create_app=create_app)
     @script_info_option('--config', script_info_key='config')
     def cli(**params):
         pass
@@ -134,4 +134,4 @@ def test_flaskgroup():
     runner = CliRunner()
     result = runner.invoke(cli, ['test'])
     assert result.exit_code == 0
-    assert result.output == 'flaskgroup\n'
+    assert result.output == 'keyesgroup\n'
