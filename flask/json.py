@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    flask.jsonimpl
+    keyes.jsonimpl
     ~~~~~~~~~~~~~~
 
-    Implementation helpers for the JSON support in Flask.
+    Implementation helpers for the JSON support in Keyes.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -50,7 +50,7 @@ def _wrap_writer_for_text(fp, encoding):
 
 
 class JSONEncoder(_json.JSONEncoder):
-    """The default Flask JSON encoder.  This one extends the default simplejson
+    """The default Keyes JSON encoder.  This one extends the default simplejson
     encoder by also supporting ``datetime`` objects, ``UUID`` as well as
     ``Markup`` objects which are serialized as RFC 822 datetime strings (same
     as the HTTP date format).  In order to support more data types override the
@@ -87,7 +87,7 @@ class JSONDecoder(_json.JSONDecoder):
     """The default JSON decoder.  This one does not change the behavior from
     the default simplejson decoder.  Consult the :mod:`json` documentation
     for more information.  This decoder is not only used for the load
-    functions of this module but also :attr:`~flask.Request`.
+    functions of this module but also :attr:`~keyes.Request`.
     """
 
 
@@ -113,7 +113,7 @@ def _load_arg_defaults(kwargs):
 
 def dumps(obj, **kwargs):
     """Serialize ``obj`` to a JSON formatted ``str`` by using the application's
-    configured encoder (:attr:`~flask.Flask.json_encoder`) if there is an
+    configured encoder (:attr:`~keyes.Keyes.json_encoder`) if there is an
     application on the stack.
 
     This function can return ``unicode`` strings or ascii-only bytestrings by
@@ -140,7 +140,7 @@ def dump(obj, fp, **kwargs):
 
 def loads(s, **kwargs):
     """Unserialize a JSON object from a string ``s`` by using the application's
-    configured decoder (:attr:`~flask.Flask.json_decoder`) if there is an
+    configured decoder (:attr:`~keyes.Keyes.json_decoder`) if there is an
     application on the stack.
     """
     _load_arg_defaults(kwargs)
@@ -200,7 +200,7 @@ def htmlsafe_dump(obj, fp, **kwargs):
 
 def jsonify(*args, **kwargs):
     """This function wraps :func:`dumps` to add a few enhancements that make
-    life easier.  It turns the JSON output into a :class:`~flask.Response`
+    life easier.  It turns the JSON output into a :class:`~keyes.Response`
     object with the :mimetype:`application/json` mimetype.  For convenience, it
     also converts multiple arguments into an array or multiple keyword arguments
     into a dict.  This means that both ``jsonify(1,2,3)`` and
@@ -218,7 +218,7 @@ def jsonify(*args, **kwargs):
 
     Example usage::
 
-        from flask import jsonify
+        from keyes import jsonify
 
         @app.route('/_get_current_user')
         def get_current_user():
