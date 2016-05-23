@@ -6,7 +6,7 @@
 
     ~ What is MiniTwit?
 
-      A SQLite and Flask powered twitter clone
+      A SQLite and Keyes powered twitter clone
 
     ~ How do I use it?
 
@@ -16,11 +16,11 @@
 
       2. fire up a shell and run this:
 
-         flask --app=minitwit initdb
+         keyes --app=minitwit initdb
 
       3. now you can run minitwit:
 
-         flask --app=minitwit run
+         keyes --app=minitwit run
 
          the application will greet you on
          http://localhost:5000/
