@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function
 
-from flask import Flask
+from keyes import Keyes
 
-app1 = Flask('app1')
-app2 = Flask('app2')
+app1 = Keyes('app1')
+app2 = Keyes('app2')
