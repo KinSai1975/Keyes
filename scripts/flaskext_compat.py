@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-    flaskext_compat
+    keyesext_compat
     ~~~~~~~~~~~~~~~
 
-    Implements the ``flask.ext`` virtual package for versions of Flask
-    older than 0.7.  This module is a noop if Flask 0.8 was detected.
+    Implements the ``keyes.ext`` virtual package for versions of keyes
+    older than 0.7.  This module is a noop if keyes 0.8 was detected.
 
     Usage::
 
-        import flaskext_compat
-        flaskext_compat.activate()
-        from flask.ext import foo
+        import keyesext_compat
+        keyesext_compat.activate()
+        from keyes.ext import foo
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -22,8 +22,8 @@ import os
 
 class ExtensionImporter(object):
     """This importer redirects imports from this submodule to other locations.
-    This makes it possible to transition from the old flaskext.name to the
-    newer flask_name without people having a hard time.
+    This makes it possible to transition from the old keyesext.name to the
+    newer keyes_name without people having a hard time.
     """
 
     def __init__(self, module_choices, wrapper_module):
@@ -117,9 +117,9 @@ class ExtensionImporter(object):
 
 
 def activate():
-    import flask
-    ext_module = types.ModuleType('flask.ext')
+    import keyes
+    ext_module = types.ModuleType('keyes.ext')
     ext_module.__path__ = []
-    flask.ext = sys.modules['flask.ext'] = ext_module
-    importer = ExtensionImporter(['flask_%s', 'flaskext.%s'], 'flask.ext')
+    keyes.ext = sys.modules['keyes.ext'] = ext_module
+    importer = ExtensionImporter(['keyes_%s', 'keyesext.%s'], 'keyes.ext')
     importer.install()
