@@ -14,7 +14,7 @@ import pytest
 import os
 import gc
 import sys
-import flask
+import keyes
 import threading
 from werkzeug.exceptions import NotFound
 
@@ -27,7 +27,7 @@ class assert_no_leak(object):
     def __enter__(self):
         gc.disable()
         _gc_lock.acquire()
-        loc = flask._request_ctx_stack._local
+        loc = keyes._request_ctx_stack._local
 
         # Force Python to track this dictionary at all times.
         # This is necessary since Python only starts tracking
@@ -48,11 +48,11 @@ class assert_no_leak(object):
 
 
 def test_memory_consumption():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     @app.route('/')
     def index():
-        return flask.render_template('simple_template.html', whiskey=42)
+        return keyes.render_template('simple_template.html', whiskey=42)
 
     def fire():
         with app.test_client() as c:
@@ -72,7 +72,7 @@ def test_memory_consumption():
 
 
 def test_safe_join_toplevel_pardir():
-    from flask.helpers import safe_join
+    from keyes.helpers import safe_join
     with pytest.raises(NotFound):
         safe_join('/foo', '..')
 
@@ -80,7 +80,7 @@ def test_safe_join_toplevel_pardir():
 def test_aborting():
     class Foo(Exception):
         whatever = 42
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
     app.testing = True
 
     @app.errorhandler(Foo)
@@ -89,7 +89,7 @@ def test_aborting():
 
     @app.route('/')
     def index():
-        raise flask.abort(flask.redirect(flask.url_for('test')))
+        raise keyes.abort(keyes.redirect(keyes.url_for('test')))
 
     @app.route('/test')
     def test():
