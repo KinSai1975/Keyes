@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.wrappers
+    keyes.wrappers
     ~~~~~~~~~~~~~~
 
     Implements the WSGI wrappers (request and response).
@@ -26,15 +26,15 @@ def _get_data(req, cache):
 
 
 class Request(RequestBase):
-    """The request object used by default in Flask.  Remembers the
+    """The request object used by default in Keyes.  Remembers the
     matched endpoint and view arguments.
 
-    It is what ends up as :class:`~flask.request`.  If you want to replace
+    It is what ends up as :class:`~keyes.request`.  If you want to replace
     the request object used you can subclass this and set
-    :attr:`~flask.Flask.request_class` to your subclass.
+    :attr:`~keyes.Keyes.request_class` to your subclass.
 
     The request object is a :class:`~werkzeug.wrappers.Request` subclass and
-    provides all of the attributes Werkzeug defines plus a few Flask
+    provides all of the attributes Werkzeug defines plus a few Keyes
     specific ones.
     """
 
@@ -193,12 +193,12 @@ class Request(RequestBase):
 
 
 class Response(ResponseBase):
-    """The response object that is used by default in Flask.  Works like the
+    """The response object that is used by default in Keyes.  Works like the
     response object from Werkzeug but is set to have an HTML mimetype by
     default.  Quite often you don't have to create this object yourself because
-    :meth:`~flask.Flask.make_response` will take care of that for you.
+    :meth:`~keyes.Keyes.make_response` will take care of that for you.
 
     If you want to replace the response object used you can subclass this and
-    set :attr:`~flask.Flask.response_class` to your subclass.
+    set :attr:`~keyes.Keyes.response_class` to your subclass.
     """
     default_mimetype = 'text/html'
