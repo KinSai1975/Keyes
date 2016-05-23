@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.templating
+    keyes.templating
     ~~~~~~~~~~~~~~~~
 
     Implements the bridge to Jinja2.
@@ -32,7 +32,7 @@ def _default_template_ctx_processor():
 
 class Environment(BaseEnvironment):
     """Works like a regular Jinja2 environment but has some additional
-    knowledge of how Flask's blueprint works so that it can prepend the
+    knowledge of how Keyes's blueprint works so that it can prepend the
     name of the blueprint to referenced templates if necessary.
     """
 
