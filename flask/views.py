@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.views
+    keyes.views
     ~~~~~~~~~~~
 
     This module provides class-based views inspired by the ones in Django.
@@ -20,7 +20,7 @@ class View(object):
     """Alternative way to use view functions.  A subclass has to implement
     :meth:`dispatch_request` which is called with the view arguments from
     the URL routing system.  If :attr:`methods` is provided the methods
-    do not have to be passed to the :meth:`~flask.Flask.add_url_rule`
+    do not have to be passed to the :meth:`~keyes.Keyes.add_url_rule`
     method explicitly::
 
         class MyView(View):
