@@ -1,9 +1,9 @@
-from flask import Flask, render_template, session, request, abort, g
+from keyes import Keyes, render_template, session, request, abort, g
 
 import requests
 
 
-app = Flask(__name__)
+app = Keyes(__name__)
 app.config.update(
     DEBUG=True,
     SECRET_KEY='my development key',
