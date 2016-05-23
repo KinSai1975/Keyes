@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.app
+    keyes.app
     ~~~~~~~~~
 
     This module implements the central WSGI application object.
@@ -65,8 +65,8 @@ def setupmethod(f):
     return update_wrapper(wrapper_func, f)
 
 
-class Flask(_PackageBoundObject):
-    """The flask object implements a WSGI application and acts as the central
+class Keyes(_PackageBoundObject):
+    """The keyes object implements a WSGI application and acts as the central
     object.  It is passed the name of the module or package of the
     application.  Once it is created it will act as a central registry for
     the view functions, the URL rules, template configuration and much more.
@@ -78,15 +78,15 @@ class Flask(_PackageBoundObject):
 
     For more information about resource loading, see :func:`open_resource`.
 
-    Usually you create a :class:`Flask` instance in your main module or
+    Usually you create a :class:`Keyes` instance in your main module or
     in the :file:`__init__.py` file of your package like this::
 
-        from flask import Flask
-        app = Flask(__name__)
+        from keyes import Keyes
+        app = Keyes(__name__)
 
     .. admonition:: About the First Parameter
 
-        The idea of the first parameter is to give Flask an idea of what
+        The idea of the first parameter is to give Keyes an idea of what
         belongs to your application.  This name is used to find resources
         on the filesystem, can be used by extensions to improve debugging
         information and a lot more.
@@ -99,13 +99,13 @@ class Flask(_PackageBoundObject):
         For example if your application is defined in :file:`yourapplication/app.py`
         you should create it with one of the two versions below::
 
-            app = Flask('yourapplication')
-            app = Flask(__name__.split('.')[0])
+            app = Keyes('yourapplication')
+            app = Keyes(__name__.split('.')[0])
 
         Why is that?  The application will work even with `__name__`, thanks
         to how resources are looked up.  However it will make debugging more
         painful.  Certain extensions can make assumptions based on the
-        import name of your application.  For example the Flask-SQLAlchemy
+        import name of your application.  For example the Keyes-SQLAlchemy
         extension will look for the code in your application that triggered
         an SQL query in debug mode.  If the import name is not properly set
         up, that debugging information is lost.  (For example it would only
@@ -142,19 +142,19 @@ class Flask(_PackageBoundObject):
                                      for loading the config are assumed to
                                      be relative to the instance path instead
                                      of the application root.
-    :param root_path: Flask by default will automatically calculate the path
+    :param root_path: Keyes by default will automatically calculate the path
                       to the root of the application.  In certain situations
                       this cannot be achieved (for instance if the package
                       is a Python 3 namespace package) and needs to be
                       manually defined.
     """
 
-    #: The class that is used for request objects.  See :class:`~flask.Request`
+    #: The class that is used for request objects.  See :class:`~keyes.Request`
     #: for more information.
     request_class = Request
 
     #: The class that is used for response objects.  See
-    #: :class:`~flask.Response` for more information.
+    #: :class:`~keyes.Response` for more information.
     response_class = Response
 
     #: The class that is used for the Jinja environment.
@@ -162,18 +162,18 @@ class Flask(_PackageBoundObject):
     #: .. versionadded:: 1.0
     jinja_environment = Environment
 
-    #: The class that is used for the :data:`~flask.g` instance.
+    #: The class that is used for the :data:`~keyes.g` instance.
     #:
     #: Example use cases for a custom class:
     #:
-    #: 1. Store arbitrary attributes on flask.g.
+    #: 1. Store arbitrary attributes on keyes.g.
     #: 2. Add a property for lazy per-request database connectors.
     #: 3. Return None instead of AttributeError on unexpected attributes.
-    #: 4. Raise exception if an unexpected attr is set, a "controlled" flask.g.
+    #: 4. Raise exception if an unexpected attr is set, a "controlled" keyes.g.
     #:
-    #: In Flask 0.9 this property was called `request_globals_class` but it
+    #: In Keyes 0.9 this property was called `request_globals_class` but it
     #: was changed in 0.10 to :attr:`app_ctx_globals_class` because the
-    #: flask.g object is now application context scoped.
+    #: keyes.g object is now application context scoped.
     #:
     #: .. versionadded:: 0.10
     app_ctx_globals_class = _AppCtxGlobals
@@ -191,7 +191,7 @@ class Flask(_PackageBoundObject):
     del _get_request_globals_class, _set_request_globals_class
 
     #: The class that is used for the ``config`` attribute of this app.
-    #: Defaults to :class:`~flask.Config`.
+    #: Defaults to :class:`~keyes.Config`.
     #:
     #: Example use cases for a custom class:
     #:
@@ -211,7 +211,7 @@ class Flask(_PackageBoundObject):
     debug = ConfigAttribute('DEBUG')
 
     #: The testing flag.  Set this to ``True`` to enable the test mode of
-    #: Flask extensions (and in the future probably also Flask itself).
+    #: Keyes extensions (and in the future probably also Keyes itself).
     #: For example this might activate unittest helpers that have an
     #: additional runtime cost which should not be enabled by default.
     #:
@@ -272,12 +272,12 @@ class Flask(_PackageBoundObject):
     #: .. versionadded:: 0.4
     logger_name = ConfigAttribute('LOGGER_NAME')
 
-    #: The JSON encoder class to use.  Defaults to :class:`~flask.json.JSONEncoder`.
+    #: The JSON encoder class to use.  Defaults to :class:`~keyes.json.JSONEncoder`.
     #:
     #: .. versionadded:: 0.10
     json_encoder = json.JSONEncoder
 
-    #: The JSON decoder class to use.  Defaults to :class:`~flask.json.JSONDecoder`.
+    #: The JSON decoder class to use.  Defaults to :class:`~keyes.json.JSONDecoder`.
     #:
     #: .. versionadded:: 0.10
     json_decoder = json.JSONDecoder
@@ -331,7 +331,7 @@ class Flask(_PackageBoundObject):
     test_client_class = None
 
     #: the session interface to use.  By default an instance of
-    #: :class:`~flask.sessions.SecureCookieSessionInterface` is used here.
+    #: :class:`~keyes.sessions.SecureCookieSessionInterface` is used here.
     #:
     #: .. versionadded:: 0.8
     session_interface = SecureCookieSessionInterface()
@@ -502,7 +502,7 @@ class Flask(_PackageBoundObject):
         #:      app.extensions['extensionname'] = SomeObject()
         #:
         #: The key must match the name of the extension module. For example in
-        #: case of a "Flask-Foo" extension in `flask_foo`, the key would be
+        #: case of a "Keyes-Foo" extension in `keyes_foo`, the key would be
         #: ``'foo'``.
         #:
         #: .. versionadded:: 0.7
@@ -521,7 +521,7 @@ class Flask(_PackageBoundObject):
         #:            return ','.join(BaseConverter.to_url(value)
         #:                            for value in values)
         #:
-        #:    app = Flask(__name__)
+        #:    app = Keyes(__name__)
         #:    app.url_map.converters['list'] = ListConverter
         self.url_map = Map()
 
@@ -541,9 +541,9 @@ class Flask(_PackageBoundObject):
                               view_func=self.send_static_file)
 
         #: The click command line context for this application.  Commands
-        #: registered here show up in the :command:`flask` command once the
+        #: registered here show up in the :command:`keyes` command once the
         #: application has been discovered.  The default commands are
-        #: provided by Flask itself and can be overridden.
+        #: provided by Keyes itself and can be overridden.
         #:
         #: This is an instance of a :class:`click.Group` object.
         self.cli = cli.AppGroup(self.name)
@@ -564,7 +564,7 @@ class Flask(_PackageBoundObject):
         """The name of the application.  This is usually the import name
         with the difference that it's guessed from the run file if the
         import name is main.  This name is used as a display name when
-        Flask needs the name of the application.  It can be set and overridden
+        Keyes needs the name of the application.  It can be set and overridden
         to change the value.
 
         .. versionadded:: 0.8
@@ -619,7 +619,7 @@ class Flask(_PackageBoundObject):
         with _logger_lock:
             if self._logger and self._logger.name == self.logger_name:
                 return self._logger
-            from flask.logging import create_logger
+            from keyes.logging import create_logger
             self._logger = rv = create_logger(self)
             return rv
 
@@ -638,9 +638,9 @@ class Flask(_PackageBoundObject):
         return self._got_first_request
 
     def make_config(self, instance_relative=False):
-        """Used to create the config attribute by the Flask constructor.
+        """Used to create the config attribute by the Keyes constructor.
         The `instance_relative` parameter is passed in from the constructor
-        of Flask (there named `instance_relative_config`) and indicates if
+        of Keyes (there named `instance_relative_config`) and indicates if
         the config should be relative to the instance path or the root path
         of the application.
 
@@ -746,7 +746,7 @@ class Flask(_PackageBoundObject):
         """Update the template context with some commonly used variables.
         This injects request, session, config and g into the template
         context as well as everything template context processors want
-        to inject.  Note that the as of Flask 0.6, the original values
+        to inject.  Note that the as of Keyes 0.6, the original values
         in the context will not be overridden if a context processor
         decides to return a value with the same key.
 
@@ -796,11 +796,11 @@ class Flask(_PackageBoundObject):
 
         It is not recommended to use this function for development with
         automatic reloading as this is badly supported.  Instead you should
-        be using the :command:`flask` command line script's ``run`` support.
+        be using the :command:`keyes` command line script's ``run`` support.
 
         .. admonition:: Keep in Mind
 
-           Flask will suppress any server error with a generic error page
+           Keyes will suppress any server error with a generic error page
            unless it is in debug mode.  As such to enable just the
            interactive debugger without the code reloading, you have to
            invoke :meth:`run` with ``debug=True`` and ``use_reloader=False``.
@@ -873,17 +873,17 @@ class Flask(_PackageBoundObject):
         be passed to the application's :attr:`test_client_class` constructor.
         For example::
 
-            from flask.testing import FlaskClient
+            from keyes.testing import KeyesClient
 
-            class CustomClient(FlaskClient):
+            class CustomClient(KeyesClient):
                 def __init__(self, authentication=None, *args, **kwargs):
-                    FlaskClient.__init__(*args, **kwargs)
+                    KeyesClient.__init__(*args, **kwargs)
                     self._authentication = authentication
 
             app.test_client_class = CustomClient
             client = app.test_client(authentication='Basic ....')
 
-        See :class:`~flask.testing.FlaskClient` for more information.
+        See :class:`~keyes.testing.KeyesClient` for more information.
 
         .. versionchanged:: 0.4
            added support for ``with`` block usage for the client.
@@ -899,7 +899,7 @@ class Flask(_PackageBoundObject):
         """
         cls = self.test_client_class
         if cls is None:
-            from flask.testing import FlaskClient as cls
+            from keyes.testing import KeyesClient as cls
         return cls(self, self.response_class, use_cookies=use_cookies, **kwargs)
 
     def open_session(self, request):
@@ -994,7 +994,7 @@ class Flask(_PackageBoundObject):
            ``OPTIONS`` is added automatically as method.
 
         :param rule: the URL rule as string
-        :param endpoint: the endpoint for the registered URL rule.  Flask
+        :param endpoint: the endpoint for the registered URL rule.  Keyes
                          itself assumes the name of the view function as
                          endpoint
         :param view_func: the function to call when serving a request to the
@@ -1005,7 +1005,7 @@ class Flask(_PackageBoundObject):
                         is a list of methods this rule should be limited
                         to (``GET``, ``POST`` etc.).  By default a rule
                         just listens for ``GET`` (and implicitly ``HEAD``).
-                        Starting with Flask 0.6, ``OPTIONS`` is implicitly
+                        Starting with Keyes 0.6, ``OPTIONS`` is implicitly
                         added and handled by the standard request handling.
         """
         if endpoint is None:
@@ -1026,7 +1026,7 @@ class Flask(_PackageBoundObject):
         # Methods that should always be added
         required_methods = set(getattr(view_func, 'required_methods', ()))
 
-        # starting with Flask 0.8 the view_func object can disable and
+        # starting with Keyes 0.8 the view_func object can disable and
         # force-enable the automatic options handling.
         provide_automatic_options = getattr(view_func,
             'provide_automatic_options', None)
@@ -1064,7 +1064,7 @@ class Flask(_PackageBoundObject):
         For more information refer to :ref:`url-route-registrations`.
 
         :param rule: the URL rule as string
-        :param endpoint: the endpoint for the registered URL rule.  Flask
+        :param endpoint: the endpoint for the registered URL rule.  Keyes
                          itself assumes the name of the view function as
                          endpoint
         :param options: the options to be forwarded to the underlying
@@ -1073,7 +1073,7 @@ class Flask(_PackageBoundObject):
                         is a list of methods this rule should be limited
                         to (``GET``, ``POST`` etc.).  By default a rule
                         just listens for ``GET`` (and implicitly ``HEAD``).
-                        Starting with Flask 0.6, ``OPTIONS`` is implicitly
+                        Starting with Keyes 0.6, ``OPTIONS`` is implicitly
                         added and handled by the standard request handling.
         """
         def decorator(f):
@@ -1317,7 +1317,7 @@ class Flask(_PackageBoundObject):
         :attr:`response_class` and return a new response object or the
         same (see :meth:`process_response`).
 
-        As of Flask 0.7 this function might not be executed at the end of the
+        As of Keyes 0.7 this function might not be executed at the end of the
         request in case an unhandled exception occurred.
         """
         self.after_request_funcs.setdefault(None, []).append(f)
@@ -1354,7 +1354,7 @@ class Flask(_PackageBoundObject):
 
         .. admonition:: Debug Note
 
-           In debug mode Flask will not tear down a request on an exception
+           In debug mode Keyes will not tear down a request on an exception
            immediately.  Instead it will keep it alive so that the interactive
            debugger can still access it.  This behavior can be controlled
            by the ``PRESERVE_CONTEXT_ON_EXCEPTION`` configuration variable.
@@ -1828,7 +1828,7 @@ class Flask(_PackageBoundObject):
         call all the :meth:`after_request` decorated functions.
 
         .. versionchanged:: 0.5
-           As of Flask 0.5 the functions registered for after request
+           As of Keyes 0.5 the functions registered for after request
            execution are called in reverse order of registration.
 
         :param response: a :attr:`response_class` object.
@@ -1851,7 +1851,7 @@ class Flask(_PackageBoundObject):
     def do_teardown_request(self, exc=_sentinel):
         """Called after the actual request dispatching and will
         call every as :meth:`teardown_request` decorated function.  This is
-        not actually called by the :class:`Flask` object itself but is always
+        not actually called by the :class:`Keyes` object itself but is always
         triggered when the request context is popped.  That way we have a
         tighter control over certain resources under testing environments.
 
@@ -1884,7 +1884,7 @@ class Flask(_PackageBoundObject):
 
     def app_context(self):
         """Binds the application only.  For as long as the application is bound
-        to the current context the :data:`flask.current_app` points to that
+        to the current context the :data:`keyes.current_app` points to that
         application.  An application context is automatically created when a
         request context is pushed if necessary.
 
@@ -1898,7 +1898,7 @@ class Flask(_PackageBoundObject):
         return AppContext(self)
 
     def request_context(self, environ):
-        """Creates a :class:`~flask.ctx.RequestContext` from the given
+        """Creates a :class:`~keyes.ctx.RequestContext` from the given
         environment and binds it to the current context.  This must be used in
         combination with the ``with`` statement because the request is only bound
         to the current context for the duration of the ``with`` block.
@@ -1932,7 +1932,7 @@ class Flask(_PackageBoundObject):
         :class:`werkzeug.test.EnvironBuilder` for more information, this
         function accepts the same arguments).
         """
-        from flask.testing import make_test_environ_builder
+        from keyes.testing import make_test_environ_builder
         builder = make_test_environ_builder(self, *args, **kwargs)
         try:
             return self.request_context(builder.get_environ())
