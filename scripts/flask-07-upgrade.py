@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    flask-07-upgrade
+    keyes-07-upgrade
     ~~~~~~~~~~~~~~~~
 
     This command line script scans a whole application tree and attempts to
@@ -38,7 +38,7 @@ _app_re_part = r'((?:[a-zA-Z_][a-zA-Z0-9_]*app)|app|application)'
 _string_re_part = r"('([^'\\]*(?:\\.[^'\\]*)*)'" \
                   r'|"([^"\\]*(?:\\.[^"\\]*)*)")'
 
-_from_import_re = re.compile(r'^\s*from flask import\s+')
+_from_import_re = re.compile(r'^\s*from keyes import\s+')
 _url_for_re = re.compile(r'\b(url_for\()(%s)' % _string_re_part)
 _render_template_re = re.compile(r'\b(render_template\()(%s)' % _string_re_part)
 _after_request_re = re.compile(r'((?:@\S+\.(?:app_)?))(after_request)(\b\s*$)(?m)')
