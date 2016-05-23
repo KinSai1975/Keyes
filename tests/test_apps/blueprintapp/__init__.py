@@ -1,6 +1,6 @@
-from flask import Flask
+from keyes import Keyes
 
-app = Flask(__name__)
+app = Keyes(__name__)
 app.config['DEBUG'] = True
 from blueprintapp.apps.admin import admin
 from blueprintapp.apps.frontend import frontend
