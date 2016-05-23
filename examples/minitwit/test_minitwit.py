@@ -149,3 +149,4 @@ def test_timelines(client):
     rv = client.get('/')
     assert b'the message by foo' not in rv.data
     assert b'the message by bar' in rv.data
+    
