@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.debughelpers
+    keyes.debughelpers
     ~~~~~~~~~~~~~~~~~~
 
     Various helpers to make the development experience better.
@@ -9,7 +9,7 @@
     :license: BSD, see LICENSE for more details.
 """
 from ._compat import implements_to_string, text_type
-from .app import Flask
+from .app import Keyes
 from .blueprints import Blueprint
 from .globals import _request_ctx_stack
 
@@ -45,7 +45,7 @@ class DebugFilesKeyError(KeyError, AssertionError):
 
 
 class FormDataRoutingRedirect(AssertionError):
-    """This exception is raised by Flask in debug mode if it detects a
+    """This exception is raised by Keyes in debug mode if it detects a
     redirect caused by the routing system when the request method is not
     GET, HEAD or OPTIONS.  Reasoning: form data will be dropped.
     """
@@ -59,7 +59,7 @@ class FormDataRoutingRedirect(AssertionError):
         # In case just a slash was appended we can be extra helpful
         if request.base_url + '/' == exc.new_url.split('?')[0]:
             buf.append('  The URL was defined with a trailing slash so '
-                       'Flask will automatically redirect to the URL '
+                       'Keyes will automatically redirect to the URL '
                        'with the trailing slash if it was accessed '
                        'without one.')
 
@@ -72,7 +72,7 @@ class FormDataRoutingRedirect(AssertionError):
 
 
 def attach_enctype_error_multidict(request):
-    """Since Flask 0.8 we're monkeypatching the files object in case a
+    """Since Keyes 0.8 we're monkeypatching the files object in case a
     request is detected that does not use multipart form data but the files
     object is accessed.
     """
@@ -117,7 +117,7 @@ def explain_template_loading_attempts(app, template, attempts):
         blueprint = reqctx.request.blueprint
 
     for idx, (loader, srcobj, triple) in enumerate(attempts):
-        if isinstance(srcobj, Flask):
+        if isinstance(srcobj, Keyes):
             src_info = 'application "%s"' % srcobj.import_name
         elif isinstance(srcobj, Blueprint):
             src_info = 'blueprint "%s" (%s)' % (srcobj.name,
@@ -150,6 +150,6 @@ def explain_template_loading_attempts(app, template, attempts):
         info.append('  The template was looked up from an endpoint that '
                     'belongs to the blueprint "%s".' % blueprint)
         info.append('  Maybe you did not place a template in the right folder?')
-        info.append('  See http://flask.pocoo.org/docs/blueprints/#templates')
+        info.append('  See http://keyes.pocoo.org/docs/blueprints/#templates')
 
     app.logger.info('\n'.join(info))
