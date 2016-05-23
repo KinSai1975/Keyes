@@ -11,20 +11,20 @@
 
 import pytest
 
-import flask
+import keyes
 
 
 class TestRequestDeprecation(object):
 
     def test_request_json(self, catch_deprecation_warnings):
         """Request.json is deprecated"""
-        app = flask.Flask(__name__)
+        app = keyes.Keyes(__name__)
         app.testing = True
 
         @app.route('/', methods=['POST'])
         def index():
-            assert flask.request.json == {'spam': 42}
-            print(flask.request.json)
+            assert keyes.request.json == {'spam': 42}
+            print(keyes.request.json)
             return 'OK'
 
         with catch_deprecation_warnings() as captured:
@@ -35,12 +35,12 @@ class TestRequestDeprecation(object):
 
     def test_request_module(self, catch_deprecation_warnings):
         """Request.module is deprecated"""
-        app = flask.Flask(__name__)
+        app = keyes.Keyes(__name__)
         app.testing = True
 
         @app.route('/')
         def index():
-            assert flask.request.module is None
+            assert keyes.request.module is None
             return 'OK'
 
         with catch_deprecation_warnings() as captured:
