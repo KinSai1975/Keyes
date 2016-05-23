@@ -3,29 +3,29 @@
     tests.test_instance
     ~~~~~~~~~~~~~~~~~~~
 
-    :copyright: (c) 2015 by the Flask Team, see AUTHORS for more details.
+    :copyright: (c) 2015 by the Keyes Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 import os
 import sys
 
 import pytest
-import flask
-from flask._compat import PY2
+import keyes
+from keyes._compat import PY2
 
 
 def test_explicit_instance_paths(modules_tmpdir):
     with pytest.raises(ValueError) as excinfo:
-        flask.Flask(__name__, instance_path='instance')
+        keyes.Keyes(__name__, instance_path='instance')
     assert 'must be absolute' in str(excinfo.value)
 
-    app = flask.Flask(__name__, instance_path=str(modules_tmpdir))
+    app = keyes.Keyes(__name__, instance_path=str(modules_tmpdir))
     assert app.instance_path == str(modules_tmpdir)
 
 
 def test_main_module_paths(modules_tmpdir, purge_module):
     app = modules_tmpdir.join('main_app.py')
-    app.write('import flask\n\napp = flask.Flask("__main__")')
+    app.write('import keyes\n\napp = keyes.Keyes("__main__")')
     purge_module('main_app')
 
     from main_app import app
@@ -36,9 +36,9 @@ def test_main_module_paths(modules_tmpdir, purge_module):
 def test_uninstalled_module_paths(modules_tmpdir, purge_module):
     app = modules_tmpdir.join('config_module_app.py').write(
         'import os\n'
-        'import flask\n'
+        'import keyes\n'
         'here = os.path.abspath(os.path.dirname(__file__))\n'
-        'app = flask.Flask(__name__)\n'
+        'app = keyes.Keyes(__name__)\n'
     )
     purge_module('config_module_app')
 
@@ -51,9 +51,9 @@ def test_uninstalled_package_paths(modules_tmpdir, purge_module):
     init = app.join('__init__.py')
     init.write(
         'import os\n'
-        'import flask\n'
+        'import keyes\n'
         'here = os.path.abspath(os.path.dirname(__file__))\n'
-        'app = flask.Flask(__name__)\n'
+        'app = keyes.Keyes(__name__)\n'
     )
     purge_module('config_package_app')
 
@@ -64,8 +64,8 @@ def test_uninstalled_package_paths(modules_tmpdir, purge_module):
 def test_installed_module_paths(modules_tmpdir, modules_tmpdir_prefix,
                                 purge_module, site_packages, limit_loader):
     site_packages.join('site_app.py').write(
-        'import flask\n'
-        'app = flask.Flask(__name__)\n'
+        'import keyes\n'
+        'app = keyes.Keyes(__name__)\n'
     )
     purge_module('site_app')
 
@@ -82,7 +82,7 @@ def test_installed_package_paths(limit_loader, modules_tmpdir,
 
     app = installed_path.mkdir('installed_package')
     init = app.join('__init__.py')
-    init.write('import flask\napp = flask.Flask(__name__)')
+    init.write('import keyes\napp = keyes.Keyes(__name__)')
     purge_module('installed_package')
 
     from installed_package import app
@@ -95,7 +95,7 @@ def test_prefix_package_paths(limit_loader, modules_tmpdir,
                               site_packages):
     app = site_packages.mkdir('site_package')
     init = app.join('__init__.py')
-    init.write('import flask\napp = flask.Flask(__name__)')
+    init.write('import keyes\napp = keyes.Keyes(__name__)')
     purge_module('site_package')
 
     import site_package
@@ -106,7 +106,7 @@ def test_prefix_package_paths(limit_loader, modules_tmpdir,
 def test_egg_installed_paths(install_egg, modules_tmpdir,
                              modules_tmpdir_prefix):
     modules_tmpdir.mkdir('site_egg').join('__init__.py').write(
-        'import flask\n\napp = flask.Flask(__name__)'
+        'import keyes\n\napp = keyes.Keyes(__name__)'
     )
     install_egg('site_egg')
     try:
@@ -121,7 +121,7 @@ def test_egg_installed_paths(install_egg, modules_tmpdir,
 @pytest.mark.skipif(not PY2, reason='This only works under Python 2.')
 def test_meta_path_loader_without_is_package(request, modules_tmpdir):
     app = modules_tmpdir.join('unimportable.py')
-    app.write('import flask\napp = flask.Flask(__name__)')
+    app.write('import keyes\napp = keyes.Keyes(__name__)')
 
     class Loader(object):
         def find_module(self, name, path=None):
