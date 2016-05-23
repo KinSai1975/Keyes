@@ -1,19 +1,19 @@
 """
-Flask
+keyes
 -----
 
-Flask is a microframework for Python based on Werkzeug, Jinja 2 and good
+keyes is a microframework for Python based on Werkzeug, Jinja 2 and good
 intentions. And before you ask: It's BSD licensed!
 
-Flask is Fun
+keyes is Fun
 ````````````
 
 Save in a hello.py:
 
 .. code:: python
 
-    from flask import Flask
-    app = Flask(__name__)
+    from keyes import keyes
+    app = keyes(__name__)
 
     @app.route("/")
     def hello():
@@ -29,17 +29,17 @@ And run it:
 
 .. code:: bash
 
-    $ pip install Flask
+    $ pip install keyes
     $ python hello.py
      * Running on http://localhost:5000/
 
 Links
 `````
 
-* `website <http://flask.pocoo.org/>`_
-* `documentation <http://flask.pocoo.org/docs/>`_
+* `website <http://keyes.pocoo.org/>`_
+* `documentation <http://keyes.pocoo.org/docs/>`_
 * `development version
-  <http://github.com/pallets/flask/zipball/master#egg=Flask-dev>`_
+  <http://github.com/pallets/keyes/zipball/master#egg=keyes-dev>`_
 
 """
 import re
@@ -49,22 +49,22 @@ from setuptools import setup
 
 _version_re = re.compile(r'__version__\s+=\s+(.*)')
 
-with open('flask/__init__.py', 'rb') as f:
+with open('keyes/__init__.py', 'rb') as f:
     version = str(ast.literal_eval(_version_re.search(
         f.read().decode('utf-8')).group(1)))
 
 
 setup(
-    name='Flask',
+    name='keyes',
     version=version,
-    url='http://github.com/pallets/flask/',
+    url='http://github.com/pallets/keyes/',
     license='BSD',
     author='Armin Ronacher',
     author_email='armin.ronacher@active-4.com',
     description='A microframework based on Werkzeug, Jinja2 '
                 'and good intentions',
     long_description=__doc__,
-    packages=['flask', 'flask.ext'],
+    packages=['keyes', 'keyes.ext'],
     include_package_data=True,
     zip_safe=False,
     platforms='any',
@@ -93,6 +93,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        flask=flask.cli:main
+        keyes=keyes.cli:main
     '''
 )
