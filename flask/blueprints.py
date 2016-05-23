@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-    flask.blueprints
+    keyes.blueprints
     ~~~~~~~~~~~~~~~~
 
     Blueprints are the recommended way to implement larger or more
-    pluggable applications in Flask 0.7 and later.
+    pluggable applications in Keyes 0.7 and later.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -17,7 +17,7 @@ from .helpers import _PackageBoundObject, _endpoint_from_view_func
 class BlueprintSetupState(object):
     """Temporary holder object for registering a blueprint with the
     application.  An instance of this class is created by the
-    :meth:`~flask.Blueprint.make_setup_state` method and later passed
+    :meth:`~keyes.Blueprint.make_setup_state` method and later passed
     to all register callback functions.
     """
 
@@ -29,7 +29,7 @@ class BlueprintSetupState(object):
         self.blueprint = blueprint
 
         #: a dictionary with all options that were passed to the
-        #: :meth:`~flask.Flask.register_blueprint` method.
+        #: :meth:`~keyes.Keyes.register_blueprint` method.
         self.options = options
 
         #: as blueprints can be registered multiple times with the
@@ -79,7 +79,7 @@ class BlueprintSetupState(object):
 class Blueprint(_PackageBoundObject):
     """Represents a blueprint.  A blueprint is an object that records
     functions that will be called with the
-    :class:`~flask.blueprints.BlueprintSetupState` later to register functions
+    :class:`~keyes.blueprints.BlueprintSetupState` later to register functions
     or other things on the main application.  See :ref:`blueprints` for more
     information.
 
@@ -130,17 +130,17 @@ class Blueprint(_PackageBoundObject):
         return self.record(update_wrapper(wrapper, func))
 
     def make_setup_state(self, app, options, first_registration=False):
-        """Creates an instance of :meth:`~flask.blueprints.BlueprintSetupState`
+        """Creates an instance of :meth:`~keyes.blueprints.BlueprintSetupState`
         object that is later passed to the register callback functions.
         Subclasses can override this to return a subclass of the setup state.
         """
         return BlueprintSetupState(self, app, options, first_registration)
 
     def register(self, app, options, first_registration=False):
-        """Called by :meth:`Flask.register_blueprint` to register a blueprint
+        """Called by :meth:`Keyes.register_blueprint` to register a blueprint
         on the application.  This can be overridden to customize the register
         behavior.  Keyword arguments from
-        :func:`~flask.Flask.register_blueprint` are directly forwarded to this
+        :func:`~keyes.Keyes.register_blueprint` are directly forwarded to this
         method in the `options` dictionary.
         """
         self._got_registered_once = True
@@ -154,7 +154,7 @@ class Blueprint(_PackageBoundObject):
             deferred(state)
 
     def route(self, rule, **options):
-        """Like :meth:`Flask.route` but for a blueprint.  The endpoint for the
+        """Like :meth:`Keyes.route` but for a blueprint.  The endpoint for the
         :func:`url_for` function is prefixed with the name of the blueprint.
         """
         def decorator(f):
@@ -164,7 +164,7 @@ class Blueprint(_PackageBoundObject):
         return decorator
 
     def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
-        """Like :meth:`Flask.add_url_rule` but for a blueprint.  The endpoint for
+        """Like :meth:`Keyes.add_url_rule` but for a blueprint.  The endpoint for
         the :func:`url_for` function is prefixed with the name of the blueprint.
         """
         if endpoint:
@@ -173,7 +173,7 @@ class Blueprint(_PackageBoundObject):
             s.add_url_rule(rule, endpoint, view_func, **options))
 
     def endpoint(self, endpoint):
-        """Like :meth:`Flask.endpoint` but for a blueprint.  This does not
+        """Like :meth:`Keyes.endpoint` but for a blueprint.  This does not
         prefix the endpoint with the blueprint name, this has to be done
         explicitly by the user of this method.  If the endpoint is prefixed
         with a `.` it will be registered to the current blueprint, otherwise
@@ -188,7 +188,7 @@ class Blueprint(_PackageBoundObject):
 
     def app_template_filter(self, name=None):
         """Register a custom template filter, available application wide.  Like
-        :meth:`Flask.template_filter` but for a blueprint.
+        :meth:`Keyes.template_filter` but for a blueprint.
 
         :param name: the optional name of the filter, otherwise the
                      function name will be used.
@@ -200,7 +200,7 @@ class Blueprint(_PackageBoundObject):
 
     def add_app_template_filter(self, f, name=None):
         """Register a custom template filter, available application wide.  Like
-        :meth:`Flask.add_template_filter` but for a blueprint.  Works exactly
+        :meth:`Keyes.add_template_filter` but for a blueprint.  Works exactly
         like the :meth:`app_template_filter` decorator.
 
         :param name: the optional name of the filter, otherwise the
@@ -212,7 +212,7 @@ class Blueprint(_PackageBoundObject):
 
     def app_template_test(self, name=None):
         """Register a custom template test, available application wide.  Like
-        :meth:`Flask.template_test` but for a blueprint.
+        :meth:`Keyes.template_test` but for a blueprint.
 
         .. versionadded:: 0.10
 
@@ -226,7 +226,7 @@ class Blueprint(_PackageBoundObject):
 
     def add_app_template_test(self, f, name=None):
         """Register a custom template test, available application wide.  Like
-        :meth:`Flask.add_template_test` but for a blueprint.  Works exactly
+        :meth:`Keyes.add_template_test` but for a blueprint.  Works exactly
         like the :meth:`app_template_test` decorator.
 
         .. versionadded:: 0.10
@@ -240,7 +240,7 @@ class Blueprint(_PackageBoundObject):
 
     def app_template_global(self, name=None):
         """Register a custom template global, available application wide.  Like
-        :meth:`Flask.template_global` but for a blueprint.
+        :meth:`Keyes.template_global` but for a blueprint.
 
         .. versionadded:: 0.10
 
@@ -254,7 +254,7 @@ class Blueprint(_PackageBoundObject):
 
     def add_app_template_global(self, f, name=None):
         """Register a custom template global, available application wide.  Like
-        :meth:`Flask.add_template_global` but for a blueprint.  Works exactly
+        :meth:`Keyes.add_template_global` but for a blueprint.  Works exactly
         like the :meth:`app_template_global` decorator.
 
         .. versionadded:: 0.10
@@ -267,7 +267,7 @@ class Blueprint(_PackageBoundObject):
         self.record_once(register_template)
 
     def before_request(self, f):
-        """Like :meth:`Flask.before_request` but for a blueprint.  This function
+        """Like :meth:`Keyes.before_request` but for a blueprint.  This function
         is only executed before each request that is handled by a function of
         that blueprint.
         """
@@ -276,7 +276,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def before_app_request(self, f):
-        """Like :meth:`Flask.before_request`.  Such a function is executed
+        """Like :meth:`Keyes.before_request`.  Such a function is executed
         before each request, even if outside of a blueprint.
         """
         self.record_once(lambda s: s.app.before_request_funcs
@@ -284,14 +284,14 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def before_app_first_request(self, f):
-        """Like :meth:`Flask.before_first_request`.  Such a function is
+        """Like :meth:`Keyes.before_first_request`.  Such a function is
         executed before the first request to the application.
         """
         self.record_once(lambda s: s.app.before_first_request_funcs.append(f))
         return f
 
     def after_request(self, f):
-        """Like :meth:`Flask.after_request` but for a blueprint.  This function
+        """Like :meth:`Keyes.after_request` but for a blueprint.  This function
         is only executed after each request that is handled by a function of
         that blueprint.
         """
@@ -300,7 +300,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def after_app_request(self, f):
-        """Like :meth:`Flask.after_request` but for a blueprint.  Such a function
+        """Like :meth:`Keyes.after_request` but for a blueprint.  Such a function
         is executed after each request, even if outside of the blueprint.
         """
         self.record_once(lambda s: s.app.after_request_funcs
@@ -308,7 +308,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def teardown_request(self, f):
-        """Like :meth:`Flask.teardown_request` but for a blueprint.  This
+        """Like :meth:`Keyes.teardown_request` but for a blueprint.  This
         function is only executed when tearing down requests handled by a
         function of that blueprint.  Teardown request functions are executed
         when the request context is popped, even when no actual request was
@@ -319,7 +319,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def teardown_app_request(self, f):
-        """Like :meth:`Flask.teardown_request` but for a blueprint.  Such a
+        """Like :meth:`Keyes.teardown_request` but for a blueprint.  Such a
         function is executed when tearing down each request, even if outside of
         the blueprint.
         """
@@ -328,7 +328,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def context_processor(self, f):
-        """Like :meth:`Flask.context_processor` but for a blueprint.  This
+        """Like :meth:`Keyes.context_processor` but for a blueprint.  This
         function is only executed for requests handled by a blueprint.
         """
         self.record_once(lambda s: s.app.template_context_processors
@@ -336,7 +336,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def app_context_processor(self, f):
-        """Like :meth:`Flask.context_processor` but for a blueprint.  Such a
+        """Like :meth:`Keyes.context_processor` but for a blueprint.  Such a
         function is executed each request, even if outside of the blueprint.
         """
         self.record_once(lambda s: s.app.template_context_processors
@@ -344,7 +344,7 @@ class Blueprint(_PackageBoundObject):
         return f
 
     def app_errorhandler(self, code):
-        """Like :meth:`Flask.errorhandler` but for a blueprint.  This
+        """Like :meth:`Keyes.errorhandler` but for a blueprint.  This
         handler is used for all requests, even if outside of the blueprint.
         """
         def decorator(f):
@@ -392,8 +392,8 @@ class Blueprint(_PackageBoundObject):
         special case is the 500 internal server error which is always looked
         up from the application.
 
-        Otherwise works as the :meth:`~flask.Flask.errorhandler` decorator
-        of the :class:`~flask.Flask` object.
+        Otherwise works as the :meth:`~keyes.Keyes.errorhandler` decorator
+        of the :class:`~keyes.Keyes` object.
         """
         def decorator(f):
             self.record_once(lambda s: s.app._register_error_handler(
@@ -403,8 +403,8 @@ class Blueprint(_PackageBoundObject):
 
     def register_error_handler(self, code_or_exception, f):
         """Non-decorator version of the :meth:`errorhandler` error attach
-        function, akin to the :meth:`~flask.Flask.register_error_handler`
-        application-wide function of the :class:`~flask.Flask` object but
+        function, akin to the :meth:`~keyes.Keyes.register_error_handler`
+        application-wide function of the :class:`~keyes.Keyes` object but
         for error handlers limited to this blueprint.
 
         .. versionadded:: 1.0
