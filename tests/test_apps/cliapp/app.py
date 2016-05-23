@@ -1,5 +1,5 @@
 from __future__ import absolute_import, print_function
 
-from flask import Flask
+from keyes import Keyes
 
-testapp = Flask('testapp')
+testapp = Keyes('testapp')
