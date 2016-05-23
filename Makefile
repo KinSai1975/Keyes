@@ -15,7 +15,7 @@ release:
 	python scripts/make-release.py
 
 ext-test:
-	python tests/flaskext_test.py --browse
+	python tests/keyesext_test.py --browse
 
 clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
@@ -25,11 +25,11 @@ clean-pyc:
 upload-docs:
 	$(MAKE) -C docs html dirhtml latex epub
 	$(MAKE) -C docs/_build/latex all-pdf
-	cd docs/_build/; mv html flask-docs; zip -r flask-docs.zip flask-docs; mv flask-docs html
-	rsync -a docs/_build/dirhtml/ flow.srv.pocoo.org:/srv/websites/flask.pocoo.org/docs/
-	rsync -a docs/_build/latex/Flask.pdf flow.srv.pocoo.org:/srv/websites/flask.pocoo.org/docs/flask-docs.pdf
-	rsync -a docs/_build/flask-docs.zip flow.srv.pocoo.org:/srv/websites/flask.pocoo.org/docs/flask-docs.zip
-	rsync -a docs/_build/epub/Flask.epub flow.srv.pocoo.org:/srv/websites/flask.pocoo.org/docs/flask-docs.epub
+	cd docs/_build/; mv html keyes-docs; zip -r keyes-docs.zip keyes-docs; mv keyes-docs html
+	rsync -a docs/_build/dirhtml/ flow.srv.pocoo.org:/srv/websites/keyes.pocoo.org/docs/
+	rsync -a docs/_build/latex/keyes.pdf flow.srv.pocoo.org:/srv/websites/keyes.pocoo.org/docs/keyes-docs.pdf
+	rsync -a docs/_build/keyes-docs.zip flow.srv.pocoo.org:/srv/websites/keyes.pocoo.org/docs/keyes-docs.zip
+	rsync -a docs/_build/epub/keyes.epub flow.srv.pocoo.org:/srv/websites/keyes.pocoo.org/docs/keyes-docs.epub
 
 # ebook-convert docs: http://manual.calibre-ebook.com/cli/ebook-convert.html
 ebook:
@@ -37,7 +37,7 @@ ebook:
 	@echo 'Command `ebook-covert` is provided by calibre package.'
 	@echo 'Requires X-forwarding for Qt features used in conversion (ssh -X).'
 	@echo 'Do not mind "Invalid value for ..." CSS errors if .mobi renders.'
-	ssh -X pocoo.org ebook-convert /var/www/flask.pocoo.org/docs/flask-docs.epub /var/www/flask.pocoo.org/docs/flask-docs.mobi --cover http://flask.pocoo.org/docs/_images/logo-full.png --authors 'Armin Ronacher'
+	ssh -X pocoo.org ebook-convert /var/www/keyes.pocoo.org/docs/keyes-docs.epub /var/www/keyes.pocoo.org/docs/keyes-docs.mobi --cover http://keyes.pocoo.org/docs/_images/logo-full.png --authors 'Armin Ronacher'
 
 docs:
 	$(MAKE) -C docs html
