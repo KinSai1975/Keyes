@@ -1,30 +1,30 @@
-                         / Flaskr /
+                         / Keyesr /
 
                  a minimal blog application
 
 
-    ~ What is Flaskr?
+    ~ What is Keyesr?
 
       A sqlite powered thumble blog application
 
     ~ How do I use it?
 
-      1. edit the configuration in the flaskr.py file or
+      1. edit the configuration in the keyesr.py file or
          export an FLASKR_SETTINGS environment variable
          pointing to a configuration file.
 
       2. initialize the database with this command:
 
-         flask --app=flaskr initdb
+         keyes --app=keyesr initdb
 
-      3. now you can run flaskr:
+      3. now you can run keyesr:
 
-         flask --app=flaskr run
+         keyes --app=keyesr run
 
          the application will greet you on
          http://localhost:5000/
 
     ~ Is it tested?
 
-      You betcha.  Run the `test_flaskr.py` file to see
+      You betcha.  Run the `test_keyesr.py` file to see
       the tests pass.
