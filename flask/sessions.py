@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask.sessions
+    keyes.sessions
     ~~~~~~~~~~~~~~
 
     Implements cookie based sessions based on itsdangerous.
@@ -24,7 +24,7 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature
 
 class SessionMixin(object):
     """Expands a basic dictionary with an accessors that are expected
-    by Flask extensions and users for the session.
+    by Keyes extensions and users for the session.
     """
 
     def _get_permanent(self):
@@ -68,7 +68,7 @@ def _tag(value):
         try:
             return text_type(value)
         except UnicodeError:
-            from flask.debughelpers import UnexpectedUnicodeError
+            from keyes.debughelpers import UnexpectedUnicodeError
             raise UnexpectedUnicodeError(u'A byte string with '
                 u'non-ASCII data was passed to the session system '
                 u'which can only store unicode strings.  Consider '
@@ -146,16 +146,16 @@ class SessionInterface(object):
         class Session(dict, SessionMixin):
             pass
 
-    If :meth:`open_session` returns ``None`` Flask will call into
+    If :meth:`open_session` returns ``None`` Keyes will call into
     :meth:`make_null_session` to create a session that acts as replacement
     if the session support cannot work because some requirement is not
     fulfilled.  The default :class:`NullSession` class that is created
     will complain that the secret key was not set.
 
     To replace the session interface on an application all you have to do
-    is to assign :attr:`flask.Flask.session_interface`::
+    is to assign :attr:`keyes.Keyes.session_interface`::
 
-        app = Flask(__name__)
+        app = Keyes(__name__)
         app.session_interface = MySessionInterface()
 
     .. versionadded:: 0.8
@@ -168,7 +168,7 @@ class SessionInterface(object):
     null_session_class = NullSession
 
     #: A flag that indicates if the session interface is pickle based.
-    #: This can be used by flask extensions to make a decision in regards
+    #: This can be used by keyes extensions to make a decision in regards
     #: to how to deal with the session object.
     #:
     #: .. versionadded:: 0.10
@@ -206,7 +206,7 @@ class SessionInterface(object):
             rv = '.' + app.config['SERVER_NAME'].rsplit(':', 1)[0]
 
             # Google chrome does not like cookies set to .localhost, so
-            # we just go with no domain then.  Flask documents anyways that
+            # we just go with no domain then.  Keyes documents anyways that
             # cross domain cookies need a fully qualified domain name
             if rv == '.localhost':
                 rv = None
