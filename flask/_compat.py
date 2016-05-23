@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    flask._compat
+    keyes._compat
     ~~~~~~~~~~~~~
 
     Some py2/py3 compatibility support based on a stripped down
