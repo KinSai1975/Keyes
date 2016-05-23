@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from werkzeug.exceptions import Forbidden, InternalServerError
-import flask
+import keyes
 
 
 def test_error_handler_no_match():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     class CustomException(Exception):
         pass
@@ -33,7 +33,7 @@ def test_error_handler_no_match():
 
 
 def test_error_handler_subclass():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     class ParentException(Exception):
         pass
@@ -74,7 +74,7 @@ def test_error_handler_subclass():
 
 
 def test_error_handler_http_subclass():
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     class ForbiddenSubclassRegistered(Forbidden):
         pass
@@ -112,7 +112,7 @@ def test_error_handler_http_subclass():
 
 
 def test_error_handler_blueprint():
-    bp = flask.Blueprint('bp', __name__)
+    bp = keyes.Blueprint('bp', __name__)
 
     @bp.errorhandler(500)
     def bp_exception_handler(e):
@@ -122,7 +122,7 @@ def test_error_handler_blueprint():
     def bp_test():
         raise InternalServerError()
 
-    app = flask.Flask(__name__)
+    app = keyes.Keyes(__name__)
 
     @app.errorhandler(500)
     def app_exception_handler(e):
