@@ -13,6 +13,7 @@ env:
   - REQUIREMENTS=lowest
   - REQUIREMENTS=release
   - REQUIREMENTS=devel
+  
 
 matrix:
   exclude:
