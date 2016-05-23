@@ -31,3 +31,4 @@ def test_urls(client):
 
     r = client.get('/pages/world')
     assert r.status_code == 200
+    
